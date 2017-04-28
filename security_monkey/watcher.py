@@ -394,18 +394,21 @@ class Watcher(object):
                 durable_items.append(item)
 
             if created_changed == 'created':
-                self.created_items.append(item)
+                self.created_items.append(ChangeItem.from_items(old_item=db_item, new_item=item))
 
             if created_changed == 'changed':
-                self.changed_items.append(item)
+                self.changed_items.append(ChangeItem.from_items(old_item=db_item, new_item=item))
 
         return durable_items
 
     def find_deleted_batch(self, exception_map):
-        arns = [item["Arn"] for item in self.total_list]
-
         from datastore_utils import inactivate_old_revisions
-        self.deleted_items.extend(inactivate_old_revisions(self, arns, self.current_account[0], self.technology))
+        existing_arns = [item["Arn"] for item in self.total_list]
+        deleted_items = inactivate_old_revisions(self, existing_arns, self.current_account[0], self.technology)
+
+        for item in deleted_items:
+            self.deleted_items.append(ChangeItem.from_items(old_item=item, new_item={}))
+
 
     def read_previous_items(self):
         """
