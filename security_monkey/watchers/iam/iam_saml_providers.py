@@ -47,20 +47,6 @@ class SamlProvider(Watcher):
         exception_map = {}
 
         from security_monkey.common.sts_connect import connect
-        import traceback
-        all_certs = []
-        app.logger.debug("Checking {}/{}/{}".format(self.index, account, region))
-        try:
-            iamconn = connect(account, 'iam', region=region)
-            marker = None
-            while True:
-                certs = self.wrap_aws_rate_limited_call(
-                    iamconn.list_server_certs,
-                    marker=marker
-                )
-                all_certs.extend(certs.server_certificate_metadata_list)
-
-        from security_monkey.common.sts_connect import connect
         for account in self.accounts:
             all_saml_providers = []
 
