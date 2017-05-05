@@ -25,7 +25,7 @@ from security_monkey.watcher import ChangeItem
 from security_monkey.exceptions import BotoConnectionIssue
 from security_monkey import app
 
-import xml.etree.ElementTree as ET
+import defusedxml.ElementTree as ET
 
 
 class SamlProvider(Watcher):
