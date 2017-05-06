@@ -29,11 +29,13 @@ class CloudAuxWatcher(Watcher):
         def slurp_items(**kwargs):
             results = []
             item_list = self.invoke_list_method(**kwargs)
+            if not item_list:
+                return results, kwargs.get('exception_map', {})
 
             for item in item_list:
-                item = self.invoke_get_method(item, **kwargs)
+                item, item_name = self.invoke_get_method(item, **kwargs)
                 if item:
-                    item = CloudAuxChangeItem.from_item(item, **kwargs)
+                    item = CloudAuxChangeItem.from_item(item_name, item, **kwargs)
                     results.append(item)
 
             return results, kwargs.get('exception_map', {})
@@ -50,9 +52,9 @@ class CloudAuxChangeItem(ChangeItem):
             new_config=config)
 
     @classmethod
-    def from_item(cls, item, **kwargs):
+    def from_item(cls, name, item, **kwargs):
         return cls(
-            name=item['Name'],
+            name=name,
             arn=item['Arn'],
             account=kwargs['account_name'],
             index=kwargs['index'],
