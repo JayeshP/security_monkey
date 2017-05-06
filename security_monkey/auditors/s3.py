@@ -21,7 +21,7 @@
 """
 
 from security_monkey.auditor import Auditor
-from security_monkey.watchers.s3 import S3
+from security_monkey.watchers.cloudaux_s3 import S3
 from security_monkey.datastore import Account
 
 

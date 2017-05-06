@@ -33,9 +33,9 @@ class CloudAuxWatcher(Watcher):
                 return results, kwargs.get('exception_map', {})
 
             for item in item_list:
-                item, item_name = self.invoke_get_method(item, **kwargs)
+                item, item_name, override_region = self.invoke_get_method(item, **kwargs)
                 if item:
-                    item = CloudAuxChangeItem.from_item(item_name, item, **kwargs)
+                    item = CloudAuxChangeItem.from_item(item_name, item, override_region, **kwargs)
                     results.append(item)
 
             return results, kwargs.get('exception_map', {})
@@ -52,11 +52,11 @@ class CloudAuxChangeItem(ChangeItem):
             new_config=config)
 
     @classmethod
-    def from_item(cls, name, item, **kwargs):
+    def from_item(cls, name, item, override_region, **kwargs):
         return cls(
             name=name,
             arn=item['Arn'],
             account=kwargs['account_name'],
             index=kwargs['index'],
-            region=kwargs['region'],
+            region=override_region or kwargs['region'],
             config=item)

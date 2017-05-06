@@ -21,4 +21,4 @@ class S3(CloudAuxWatcher):
         if bucket and bucket.get("Error"):
             raise SecurityMonkeyException("S3 Bucket: {} fetching error: {}".format(item_name, bucket["Error"]))
         
-        return bucket, item_name
+        return bucket, item_name, None

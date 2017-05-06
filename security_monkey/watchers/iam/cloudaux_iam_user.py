@@ -21,4 +21,4 @@ class IAMUser(CloudAuxWatcher):
     
     def get_method(self, item, **kwargs):
         user = get_user(item, **kwargs)
-        return user, user['UserName']
+        return user, user['UserName'], 'universal'
