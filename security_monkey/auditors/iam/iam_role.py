@@ -21,7 +21,7 @@
 """
 import json
 
-from security_monkey.watchers.iam.cloudaux_iam_role import IAMRole
+from security_monkey.watchers.iam.iam_role import IAMRole
 from security_monkey.auditors.iam.iam_policy import IAMPolicyAuditor
 from security_monkey.watchers.iam.managed_policy import ManagedPolicy
 from security_monkey.datastore import Account

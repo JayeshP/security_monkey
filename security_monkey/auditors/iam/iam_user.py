@@ -24,7 +24,7 @@ import datetime
 from dateutil import parser
 from dateutil import tz
 
-from security_monkey.watchers.iam.cloudaux_iam_user import IAMUser
+from security_monkey.watchers.iam.iam_user import IAMUser
 from security_monkey.auditors.iam.iam_policy import IAMPolicyAuditor
 from security_monkey.watchers.iam.managed_policy import ManagedPolicy
 

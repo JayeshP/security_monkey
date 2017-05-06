@@ -56,7 +56,7 @@ class CloudAuxChangeItem(ChangeItem):
         return cls(
             name=name,
             arn=item['Arn'],
-            account=kwargs['account_name'],
+            account=kwargs.get('account_name', kwargs['ProjectId']),
             index=kwargs['index'],
             region=override_region or kwargs['region'],
             config=item)
