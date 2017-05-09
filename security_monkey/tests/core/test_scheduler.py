@@ -354,7 +354,8 @@ class SchedulerTestCase(SecurityMonkeyTestCase):
     def test_audit_specific_changes(self):
         from security_monkey.scheduler import _audit_specific_changes
         from security_monkey.monitors import Monitor
-        from security_monkey.watchers.iam.iam_role import IAMRole, IAMRoleItem
+        from security_monkey.watchers.iam.iam_role import IAMRole
+        from security_monkey.watchers.cloudaux_watcher import CloudAuxChangeItem
         from security_monkey.auditors.iam.iam_role import IAMRoleAuditor
 
         # Set up the monitor:
@@ -376,7 +377,7 @@ class SchedulerTestCase(SecurityMonkeyTestCase):
             role_policy = dict(ROLE_CONF)
             role_policy["Arn"] = "arn:aws:iam::012345678910:role/roleNumber{}".format(x)
             role_policy["RoleName"] = "roleNumber{}".format(x)
-            role = IAMRoleItem.from_slurp(role_policy, account_name=test_account.name)
+            role = CloudAuxChangeItem.from_item(name=role_policy['RoleName'], item=role_policy, override_region='universal', account_name=test_account.name, index='iamrole')
             items.append(role)
 
         audit_items = watcher.find_changes_batch(items, {})

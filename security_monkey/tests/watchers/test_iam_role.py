@@ -93,7 +93,7 @@ class IAMRoleTestCase(SecurityMonkeyTestCase):
         mock_sts().start()
 
         watcher = IAMRole(accounts=[self.account.name])
-        watcher.list_roles = lambda **kwargs: []
+        watcher.list_method = lambda **kwargs: []
 
         exceptions = watcher.slurp_list()
         assert len(exceptions) == 0
@@ -110,8 +110,7 @@ class IAMRoleTestCase(SecurityMonkeyTestCase):
         def raise_exception():
             raise Exception("LOL, HAY!")
 
-        import security_monkey.watchers.iam.iam_role
-        security_monkey.watchers.iam.iam_role.list_roles = lambda **kwargs: raise_exception()
+        watcher.list_method = lambda **kwargs: raise_exception()
 
         exceptions = watcher.slurp_list()
         assert len(exceptions) == 1
@@ -153,8 +152,7 @@ class IAMRoleTestCase(SecurityMonkeyTestCase):
         def raise_exception():
             raise Exception("LOL, HAY!")
 
-        import security_monkey.watchers.iam.iam_role
-        security_monkey.watchers.iam.iam_role.get_role = lambda **kwargs: raise_exception()
+        watcher.get_method = lambda *args, **kwargs: raise_exception()
 
         items, exceptions = watcher.slurp()
         assert len(exceptions) == self.total_roles

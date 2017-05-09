@@ -10,15 +10,15 @@ class S3(CloudAuxWatcher):
     i_am_plural = 'S3 Buckets'
     honor_ephemerals = True
     ephemeral_paths = ['GrantReferences']
-    
+
     def list_method(self, **kwargs):
         buckets = list_buckets(**kwargs)['Buckets']
         return [bucket['Name'] for bucket in buckets if not self.check_ignore_list(bucket['Name'])]
 
     def get_method(self, item_name, **kwargs):
         bucket = get_bucket(item_name, **kwargs)
-        
+
         if bucket and bucket.get("Error"):
             raise SecurityMonkeyException("S3 Bucket: {} fetching error: {}".format(item_name, bucket["Error"]))
-        
+
         return bucket, item_name, None

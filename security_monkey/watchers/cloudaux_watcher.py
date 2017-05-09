@@ -33,9 +33,12 @@ class CloudAuxWatcher(Watcher):
                 return results, kwargs.get('exception_map', {})
 
             for item in item_list:
-                item, item_name, override_region = self.invoke_get_method(item, **kwargs)
-                if item:
-                    item = CloudAuxChangeItem.from_item(item_name, item, override_region, **kwargs)
+                item_details = self.invoke_get_method(item, **kwargs)
+                if item_details:
+                    item = CloudAuxChangeItem.from_item(
+                        name=item_details[1],
+                        item=item_details[0],
+                        override_region=item_details[2], **kwargs)
                     results.append(item)
 
             return results, kwargs.get('exception_map', {})
@@ -56,7 +59,7 @@ class CloudAuxChangeItem(ChangeItem):
         return cls(
             name=name,
             arn=item['Arn'],
-            account=kwargs.get('account_name', kwargs['ProjectId']),
+            account=kwargs.get('account_name', kwargs.get('ProjectId')),
             index=kwargs['index'],
             region=override_region or kwargs['region'],
             config=item)
