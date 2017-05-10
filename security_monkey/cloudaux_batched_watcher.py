@@ -30,18 +30,12 @@ class CloudAuxBatchedWatcher(CloudAuxWatcher):
 
             return items, exception_map
 
-        # results = get_item_list()
-        # exception_map = dict()
-        # for result in results:
-        #     self.total_list.extend(result[0])
-        #     exception_map.update(result[1])
         items, exception_map = self._flatten_iter_response(get_item_list())
         self.total_list.extend(items)
 
         return items, exception_map
 
     def slurp(self):
-        batched_items = list()
 
         @record_exception(source='{index}-watcher'.format(index=self.index), pop_exception_fields=True) 
         def invoke_get_method(item, **kwargs):
@@ -75,12 +69,4 @@ class CloudAuxBatchedWatcher(CloudAuxWatcher):
             self.batch_counter += 1
             return item_list, exception_map 
 
-        # results = slurp_items()
-        # items = list()
-        # exception_map = dict()
-        # for result in results:
-        #     items.extend(result[0])
-        #     exception_map.update(result[1])
         return self._flatten_iter_response(slurp_items())
-
-        # return items, exception_map
