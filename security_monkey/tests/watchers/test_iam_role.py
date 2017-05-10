@@ -35,6 +35,7 @@ class IAMRoleTestCase(SecurityMonkeyTestCase):
         db.session.commit()
 
         self.account = Account(identifier="012345678910", name="testing",
+                               third_party=False, active=True,
                                account_type_id=account_type_result.id)
         self.technology = Technology(name="iamrole")
 
@@ -81,7 +82,7 @@ class IAMRoleTestCase(SecurityMonkeyTestCase):
 
         watcher = IAMRole(accounts=[self.account.name])
 
-        exceptions = watcher.slurp_list()
+        _, exceptions = watcher.slurp_list()
 
         assert len(exceptions) == 0
         assert len(watcher.total_list) == self.total_roles
@@ -95,7 +96,7 @@ class IAMRoleTestCase(SecurityMonkeyTestCase):
         watcher = IAMRole(accounts=[self.account.name])
         watcher.list_method = lambda **kwargs: []
 
-        exceptions = watcher.slurp_list()
+        _, exceptions = watcher.slurp_list()
         assert len(exceptions) == 0
         assert len(watcher.total_list) == 0
         assert watcher.done_slurping
@@ -112,7 +113,7 @@ class IAMRoleTestCase(SecurityMonkeyTestCase):
 
         watcher.list_method = lambda **kwargs: raise_exception()
 
-        exceptions = watcher.slurp_list()
+        _, exceptions = watcher.slurp_list()
         assert len(exceptions) == 1
         assert len(ExceptionLogs.query.all()) == 1
 

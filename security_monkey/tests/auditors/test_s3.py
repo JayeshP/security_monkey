@@ -26,7 +26,7 @@ from security_monkey.datastore import Account, AccountType, AccountTypeCustomVal
 from security_monkey.tests import SecurityMonkeyTestCase
 from security_monkey import db
 
-from security_monkey.watchers.cloudaux_watcher import CloudAuxChangeItem
+from security_monkey.cloudaux_watcher import CloudAuxChangeItem
 
 # With same account ownership:
 CONFIG_ONE = json.loads(b"""{

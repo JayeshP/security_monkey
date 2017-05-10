@@ -1,4 +1,4 @@
-from security_monkey.watchers.cloudaux_watcher import CloudAuxWatcher
+from security_monkey.cloudaux_watcher import CloudAuxWatcher
 from security_monkey.exceptions import SecurityMonkeyException
 from cloudaux.aws.s3 import list_buckets
 from cloudaux.orchestration.aws.s3 import get_bucket
@@ -10,10 +10,17 @@ class S3(CloudAuxWatcher):
     i_am_plural = 'S3 Buckets'
     honor_ephemerals = True
     ephemeral_paths = ['GrantReferences']
+    service_name = 's3'
 
     def list_method(self, **kwargs):
         buckets = list_buckets(**kwargs)['Buckets']
-        return [bucket['Name'] for bucket in buckets if not self.check_ignore_list(bucket['Name'])]
+        return [bucket['Name'] for bucket in buckets]
+
+    def get_name_from_list_output(self, item):
+        return item
+
+    def _get_regions(self):
+        return ['us-east-1']
 
     def get_method(self, item_name, **kwargs):
         bucket = get_bucket(item_name, **kwargs)
@@ -21,4 +28,4 @@ class S3(CloudAuxWatcher):
         if bucket and bucket.get("Error"):
             raise SecurityMonkeyException("S3 Bucket: {} fetching error: {}".format(item_name, bucket["Error"]))
 
-        return bucket, item_name, None
+        return bucket

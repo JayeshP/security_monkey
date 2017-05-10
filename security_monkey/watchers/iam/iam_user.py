@@ -1,4 +1,4 @@
-from security_monkey.watchers.cloudaux_watcher import CloudAuxWatcher
+from security_monkey.cloudaux_watcher import CloudAuxWatcher
 from cloudaux.aws.iam import list_users
 from cloudaux.orchestration.aws.iam.user import get_user
 
@@ -12,13 +12,17 @@ class IAMUser(CloudAuxWatcher):
         "PasswordLastUsed",
             "AccessKeys$*$LastUsedDate",
             "AccessKeys$*$Region",
-            "AccessKeys$*$ServiceName"
-        ]
-    
+            "AccessKeys$*$ServiceName"]
+    override_region = 'universal'
+
+    def get_name_from_list_output(self, item):
+        return item['UserName']
+
+    def _get_regions(self):
+        return ['us-east-1']
+
     def list_method(self, **kwargs):
-        users = list_users(**kwargs)
-        return [user for user in users if not self.check_ignore_list(user['UserName'])]
-    
+        return list_users(**kwargs)
+
     def get_method(self, item, **kwargs):
-        user = get_user(item, **kwargs)
-        return user, user['UserName'], 'universal'
+        return get_user(item, **kwargs)
