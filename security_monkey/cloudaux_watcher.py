@@ -116,5 +116,5 @@ class CloudAuxChangeItem(ChangeItem):
             arn=item['Arn'],
             account=kwargs.get('account_name', kwargs.get('ProjectId')),
             index=kwargs['index'],
-            region=override_region or kwargs['region'],
+            region=override_region or kwargs['conn_dict']['region'],
             config=item)
