@@ -59,7 +59,7 @@ def gcp_resource_id_builder(service, identifier, region=''):
     return resource.replace('/', ':').replace('.', ':')
 
 
-  def modify(d, format='camelized'):
+def modify(d, format='camelized'):
     return cloudaux_modify(d, output=format)
 
 
